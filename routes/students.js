@@ -43,4 +43,16 @@ router.get('/:studentId', (req, res, next) => {
   })
 });
 
+
+
+router.delete('/:studentId', (req, res, next) => {
+  Student.findById(req.params.studentId).remove(function (err) {
+     if (err) {
+       res.status(500).send();
+     } else {
+       res.status(204).send();
+     }
+   })
+});
+
 module.exports = router;

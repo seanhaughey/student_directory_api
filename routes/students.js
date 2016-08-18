@@ -19,7 +19,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', (req, res, next) => {
-  const student = new Student(req.body);
+  const student = new Student(req.body);
+  student.save(function (err) {
+    if (err) {
+      res.status(500).send();
+    } else {
+      res.json(student);
+    }
+  });
 });
 
 module.exports = router;

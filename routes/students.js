@@ -1,6 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var Student = require('../models/student');
+const _ = require('lodash');
+
+router.use(function (req, res, next) {
+  req.body = _.pick(req.body, ['firstName', 'lastName', 'salary', 'bonusPoints'])
+  next();
+})
 
 router.get('/', function(req, res, next) {
   Student.find({}, function (err, students) {
@@ -10,6 +16,10 @@ router.get('/', function(req, res, next) {
       res.json(students);
     }
   })
+});
+
+router.post('/', (req, res, next) => {
+  const student = new Student(req.body);
 });
 
 module.exports = router;

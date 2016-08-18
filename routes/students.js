@@ -29,4 +29,18 @@ router.post('/', (req, res, next) => {
   });
 });
 
+router.get('/:studentId', (req, res, next) => {
+  Student.findById(req.params.studentId, function (err, student) {
+    if (err) {
+      res.status(500).send();
+    } else {
+      if (student) {
+        res.json(student);
+      } else {
+        res.status(404).send();
+      }
+    }
+  })
+});
+
 module.exports = router;

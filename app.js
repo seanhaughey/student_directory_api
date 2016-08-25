@@ -5,14 +5,20 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var jwt = require('express-jwt');
+
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.DB_CONNECTION);
+mongoose.connect(process.env.DB_CONNECTION)
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var students = require('./routes/students');
 
+var jwtCheck = jwt({
+  secret: new Buffer(process.env.AUTH0_CLIENT_SECRET, 'base64'),
+  audience: process.env.AUTH0_CLIENT_ID
+});
 
 var app = express();
 
@@ -27,6 +33,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
+
+app.use('/students', jwtCheck)
+
 
 app.use('/', routes);
 app.use('/users', users);
